@@ -335,6 +335,12 @@ class ImprimirController extends Controller
 
         setlocale(LC_TIME, "es_ES");
 
+        /////CONDICIONES
+        Fpdf::SetFont('Arial', 'B', 9);
+        Fpdf::SetXY(2, 293);
+        Fpdf::Cell(156,5,utf8_decode('En caso de no retirar su ORDEN en un máximo de 20 días se dará de baja sin devolución alguna.'),1,0,'C');
+        Fpdf::Ln();
+
         //FECHAS DE LA ORDEN
         Fpdf::SetFont('Arial', 'B', 8);
         ///CUADRO FECHA INICIO
