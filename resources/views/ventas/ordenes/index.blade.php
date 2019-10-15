@@ -101,7 +101,7 @@
                         @endforeach
                     </table>
                 </div>
-                {{$ordenes->render()}}
+                {{$ordenes->appends(Request::only(['searchText']))->render()}}
             </div>
         </div>
     </div>
