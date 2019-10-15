@@ -1,4 +1,5 @@
 <link href="{{ asset('/css/select2.min.css') }}" rel="stylesheet" type="text/css"/>
+<link href="https://gitcdn.github.io/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css" rel="stylesheet">
 @extends ('adminlte::layouts.app')
 @section ('contenido')
 <div class="row">
@@ -25,13 +26,13 @@
             {!!Form::Open(array('url'=>'ventas/ordenes','method'=>'POST','autocomplete'=>'off'))!!}
             {!!Form::token()!!}
             <input id="usuario" name="usuario" type="hidden" value="{{ Auth::user()->id }}"/>
-            <div class="col-lg-2 col-md-12 col-sm-12 col-xs-12">
+            <div class="col-lg-3 col-md-12 col-sm-12 col-xs-12">
                 {!!Form::text('Cliente',null,['id'=>'Cliente','class'=>'form-control','required' => 'required','placeholder'=>'Buscar Cliente'])!!}
             </div>
             <div class="col-lg-2 col-md-12 col-sm-12 col-xs-12">
                 {!!Form::select('agentes',$agentes,null,['id'=>'agentes','required' => 'required','class'=>'form-control','placeholder'=>'Agentes'])!!}
             </div>
-            <div class="col-lg-4 col-md-12 col-sm-12 col-xs-12">
+            <div class="col-lg-3 col-md-12 col-sm-12 col-xs-12">
                 <div class="form-group input-group">
                     <span class="input-group-addon" id="basic-addon1">
                         Entrega
@@ -39,7 +40,7 @@
                     {!!Form::text('Fecha_de_Entrega',null,['id'=>'Fecha_de_Entrega','required' => 'required','class'=>'form-control','placeholder'=>'Fecha de Entrega'])!!}
                 </div>
             </div>
-            <div class="col-lg-4 col-md-12 col-sm-12 col-xs-12">
+            <div class="col-lg-3 col-md-12 col-sm-12 col-xs-12">
                 <div class="form-group input-group">
                     <span class="input-group-addon" id="basic-addon1">
                         <input aria-label="..." id="checkdiseno" name="checkdiseno" type="checkbox" value="option1">
@@ -49,9 +50,13 @@
                     {!!Form::text('Revision_de_Diseno',null,['id'=>'Revision_de_Diseno','class'=>'form-control','placeholder'=>'Fecha de Revision de Diseño'])!!}
                 </div>
             </div>
+            <div class="col-lg-1 col-md-12 col-sm-12 col-xs-12">
+                <input id="domicilio" type="checkbox" data-off="Domicilio" data-onstyle="success" checked data-toggle="toggle" data-on="Domicilio" data-size="small">
+            </div>
             <div class="col-lg-4 col-md-12 col-sm-12 col-xs-12">
                 {!!Form::text('NombreComercial',null,['id'=>'NombreComercial','class'=>'form-control','required' => 'required','readonly','placeholder'=>'Nombre Comercial - Razon Social'])!!}
             </div>
+            
             <div class="col-lg-2 col-md-12 col-sm-12 col-xs-12">
                 {!!Form::text('CodigoCliente',null,['id'=>'CodigoCliente','class'=>'form-control','readonly','placeholder'=>'Codigo Cliente'])!!}
             </div>
@@ -245,11 +250,17 @@
 </script>
 <script src="{{ asset('/moment/locale/es.js') }}" type="text/javascript">
 </script>
+<script src="https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js"></script>
 <script>
     function titulo(){      
     document.title = 'Nueva Orden | Ordenes'; }
 titulo();
 </script>
+<script>
+        $(function() {
+          $('#domicilio').bootstrapToggle('off');
+        })
+      </script>
 <script>
     $(document).ready(function() {
         
