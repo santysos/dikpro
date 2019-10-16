@@ -40,6 +40,8 @@ class OrdenesFormRequest extends FormRequest
             'Valor_total',
             'descripcion',
             'usuario',
+            'domicilio',
+            
 
         ];
     }

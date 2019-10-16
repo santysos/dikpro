@@ -24,6 +24,7 @@ class Ordenes extends Model
         'Condicion',
         'agente',
         'asignador',
+        
 
     ];
 

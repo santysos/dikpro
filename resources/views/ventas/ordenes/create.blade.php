@@ -51,7 +51,7 @@
                 </div>
             </div>
             <div class="col-lg-1 col-md-12 col-sm-12 col-xs-12">
-                <input id="domicilio" type="checkbox" data-off="Domicilio" data-onstyle="success" checked data-toggle="toggle" data-on="Domicilio" data-size="small">
+                <input checked name="domicilio" id="domicilio" type="checkbox" data-off="Domicilio" data-onstyle="success" checked data-toggle="toggle" data-on="Domicilio" data-size="small">
             </div>
             <div class="col-lg-4 col-md-12 col-sm-12 col-xs-12">
                 {!!Form::text('NombreComercial',null,['id'=>'NombreComercial','class'=>'form-control','required' => 'required','readonly','placeholder'=>'Nombre Comercial - Razon Social'])!!}

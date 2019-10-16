@@ -107,6 +107,11 @@ class OrdenesController extends Controller
             $orden->Condicion     = '1';
             $orden->agente        = $request->get('agentes');
             $orden->asignador     = $request->get('usuario');
+            if($request->get('domicilio')=="on")
+            $orden->entrega_domicilio     = 1;
+
+            
+
 
             $orden->IVA   = '12';
             $orden->Abono = $request->get('Abono');
@@ -143,7 +148,7 @@ class OrdenesController extends Controller
 
             DB::commit();
 
-        } catch (\Exception $e) {
+       } catch (\Exception $e) {
             DB::rollback();
         }
 
@@ -249,7 +254,7 @@ class OrdenesController extends Controller
                 $respuesta = $respuesta->m . 'me ' . $respuesta->d . 'd ' . $respuesta->h . 'ho ' . $respuesta->i . 'min ' . $respuesta->s . 'seg';
                 return $respuesta;
             } elseif ($respuesta->y >= 1) {
-                $respuesta = $respuesta->y . 'a«Ğ ' .$respuesta->m . 'me ' . $respuesta->d . 'd ' . $respuesta->h . 'ho ' . $respuesta->i . 'min ' . $respuesta->s . 'seg';
+                $respuesta = $respuesta->y . 'aï¿½ï¿½ï¿½ ' .$respuesta->m . 'me ' . $respuesta->d . 'd ' . $respuesta->h . 'ho ' . $respuesta->i . 'min ' . $respuesta->s . 'seg';
                 return $respuesta;
             }
             return $respuesta;

@@ -15,7 +15,7 @@ class ImprimirController extends Controller
         $orden = DB::table('tb_ordenes as ord')
             ->join('tb_cliente as cli', 'ord.id_tb_cliente', '=', 'cli.id_tb_cliente')
             ->join('users as us', 'us.id', '=', 'ord.agente')
-            ->select('ord.id_tb_ordenes', 'ord.Fecha_de_Inicio', 'ord.Fecha_de_Entrega', 'ord.Revision_de_Diseno', 'ord.Total_Venta', 'ord.IVA', 'ord.Abono', 'ord.Observaciones', 'cli.id_tb_cliente', 'cli.Cliente_Nombre_Comercial', 'cli.Contacto_Razon_Social', 'cli.Cedula_Ruc', 'cli.Email', 'us.name', 'cli.Telefono')
+            ->select('ord.entrega_domicilio','ord.id_tb_ordenes', 'ord.Fecha_de_Inicio', 'ord.Fecha_de_Entrega', 'ord.Revision_de_Diseno', 'ord.Total_Venta', 'ord.IVA', 'ord.Abono', 'ord.Observaciones', 'cli.id_tb_cliente', 'cli.Cliente_Nombre_Comercial', 'cli.Contacto_Razon_Social', 'cli.Cedula_Ruc', 'cli.Email', 'us.name', 'cli.Telefono')
             ->where('ord.id_tb_ordenes', '=', $id)
             ->first();
 
@@ -28,7 +28,7 @@ class ImprimirController extends Controller
             ->get();
 
         Fpdf::AddPage('P','A4');
-         Fpdf::SetAutoPageBreak('0','0.1');
+        Fpdf::SetAutoPageBreak('0','0.1');
         Fpdf::SetFont('Arial', 'B', 14);
        
 
@@ -131,6 +131,14 @@ class ImprimirController extends Controller
 
         //Fpdf::SetFont('Arial', 'B', 14);
 
+        /////ENTREGA A DOMICILIO
+        if($orden->entrega_domicilio==1)
+        {
+        Fpdf::SetFont('Arial', 'B', 18);
+        Fpdf::SetXY(2, 110);
+        Fpdf::Cell(203,7,utf8_decode('ENTREGA A DOMICILIO'),0,0,'C');
+        Fpdf::Ln();
+        }
         //OBSERVACIONES
         Fpdf::SetFont('Arial', 'B', 8);
         Fpdf::SetXY(2, 117);
@@ -327,6 +335,14 @@ class ImprimirController extends Controller
             $y     = $y + 9;
         }
 
+        /////ENTREGA A DOMICILIO
+        if($orden->entrega_domicilio==1)
+        {
+        Fpdf::SetFont('Arial', 'B', 18);
+        Fpdf::SetXY(2, 260);
+        Fpdf::Cell(203,7,utf8_decode('ENTREGA A DOMICILIO'),0,0,'C');
+        Fpdf::Ln();
+        }
        
         //OBSERVACIONES
         Fpdf::SetFont('Arial', 'B', 8);
