@@ -15,6 +15,7 @@ class ReportesController extends Controller
 
     public function getenEntrega(Request $request)
     {
+
         function formatofecha($fecha)
         {
             if ($fecha != null) {
@@ -70,6 +71,12 @@ class ReportesController extends Controller
 
 
         if ($request) {
+            $f1 = new Carbon($request->get('s1'));
+            $f2 = new Carbon($request->get('s2'));
+
+           
+            $f2->addHours(23);
+            $f2->addMinutes(59);
 
             $enentrega = DB::table('tb_procesos as pro')
                 ->join('users as emp', 'emp.id', '=', 'pro.asignado')
@@ -79,14 +86,18 @@ class ReportesController extends Controller
                 ->select('pro.id_tb_procesos', 'pro.tb_ordenes_id_tb_ordenes', 'pro.tb_fecha_hora', 'emp.name as asignado', 'dpro.descripcion_procesos', 'usr.name as asignador', 'ord.Fecha_de_Entrega')
                 ->where('pro.id_tb_descripcion_procesos', '=', '9')
                 ->where('pro.condicion', '=', '1')
+                ->whereBetween('pro.tb_fecha_hora', [$f1, $f2])
                 ->orwhere('pro.id_tb_descripcion_procesos', '=', '16')
                 ->where('pro.condicion', '=', '1')
-                ->orderBy('pro.tb_fecha_hora', 'desc')
+                ->whereBetween('pro.tb_fecha_hora', [$f1, $f2])
+                ->orderBy('pro.tb_fecha_hora', 'desc')                
                 ->get();
 
-            // dd($enentrega);
+           // dd($enentrega);
 
             $enentrega->count = 0;
+            $cont_a_tiempo =0;
+            $eficiencia=0;
             $retraso          = date("Y-m-d H:i:s"); //se instancia la fecha y la hora actual
 
             foreach ($enentrega as $key) {
@@ -97,16 +108,20 @@ class ReportesController extends Controller
                     $key->retraso = diferenciafecha($key->Fecha_de_Entrega, $key->tb_fecha_hora); // calculo la diferencia del tiempo del tiempo actual con el tiempo de la orden
                 } else {
                     $key->retraso = "A tiempo";
+                    $cont_a_tiempo++;
                 }
 
 
                 $key->tb_fecha_hora = formatofecha($key->tb_fecha_hora); //Se asigna el formato humano a la fecha
                 $enentrega->count++;
             }
+            if($enentrega->count>0)
+            $eficiencia = number_format((($cont_a_tiempo/$enentrega->count)*100),2);
+
 
             // dd($enentrega, $retraso);
 
-            return view('reportes.entrega.index', ["enentrega" => $enentrega]);
+            return view('reportes.entrega.index', ["enentrega" => $enentrega,"eficiencia"=>$eficiencia, "cont_a_tiempo"=>$cont_a_tiempo,"f1" => $f1, "f2" => $f2]);
         }
     }
 
@@ -128,7 +143,7 @@ class ReportesController extends Controller
         }
 
         if ($request) {
-$query    = trim($request->get('searchText'));
+            $query    = trim($request->get('searchText'));
             $facturados = DB::table('tb_procesos as pro')
                 ->join('users as emp', 'emp.id', '=', 'pro.asignado')
                 ->join('users as usr', 'usr.id', '=', 'pro.asignador')
@@ -138,7 +153,7 @@ $query    = trim($request->get('searchText'));
                 ->where('pro.condicion', '=', '1')
                 ->where('pro.tb_ordenes_id_tb_ordenes', 'LIKE', '%' . $query . '%')
                 ->orderBy('pro.tb_fecha_hora', 'desc')
-              ->paginate(30);
+                ->paginate(30);
 
             //dd($enentrega->tb_fecha_hora);//
 
