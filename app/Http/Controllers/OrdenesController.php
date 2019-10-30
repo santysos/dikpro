@@ -171,7 +171,7 @@ class OrdenesController extends Controller
 
         }
 
-        function consultaasignados($id, $idtipoempleado)
+        function consultaasignados($id, $id_descripcion_procesos)
         {
             $vart = DB::table('tb_procesos as pro')
                 ->join('users as emp', 'emp.id', '=', 'pro.asignado')
@@ -179,9 +179,11 @@ class OrdenesController extends Controller
                 ->select('pro.id_tb_procesos', 'pro.tb_fecha_hora', 'emp.name as asignado', 'emp.name as asignador')
                 ->where('ord.condicion', '=', '1')
                 ->where('pro.tb_ordenes_id_tb_ordenes', '=', $id)
-                ->where('pro.id_tb_descripcion_procesos', '=', $idtipoempleado)
+                ->where('pro.id_tb_descripcion_procesos', '=', $id_descripcion_procesos)
                 ->orderBy('tb_fecha_hora', 'desc')
                 ->first();
+
+               // dd($vart);
 
             if (isset($vart)) {
                 $next = Proceso::select('tb_fecha_hora', 'id_tb_procesos', 'asignado')
@@ -189,6 +191,8 @@ class OrdenesController extends Controller
                     ->where('id_tb_procesos', '>=', $vart->id_tb_procesos)
                     ->limit('2')
                     ->get();
+                
+                  //  dd($next);
 
                 $next->finicio = formatofecha($next[0]->tb_fecha_hora);
 
@@ -289,7 +293,9 @@ class OrdenesController extends Controller
 
         $agente = consultaasignados($id, 1); //comprueba que el agente asignado
 
-        $disenador = consultaasignados($id, 5); //comprueba que el diseñador asignado
+        $disenador = consultaasignados($id, 2); //comprueba que el diseñador asignado
+
+       // dd($disenador);
 
         $impresor = consultaasignados($id, 12); //comprueba que el impresor asignado
 
