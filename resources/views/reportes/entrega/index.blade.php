@@ -61,6 +61,7 @@
                     <div class="info-box-content">
                         <span class="info-box-text">Ordenes Listas para Entrega</span>
                         <span class="info-box-number">{{$enentrega->count}}<small></small></span>
+                        <span class="info-box-text"># Total de Ordenes   <b>{{$cont_ordenes}}</b></span>
                     </div>
                     <!-- /.info-box-content -->
                 </div>
@@ -74,7 +75,7 @@
                         <span class="info-box-text">Ordenes a Tiempo</span>
                         <span class="info-box-number">{{$cont_a_tiempo}}
                                 <small></small></span>
-                                <span class="info-box-text">Ordenes Atrasadas {{$enentrega->count-$cont_a_tiempo}}</span>
+                                <span class="info-box-text">Ordenes Atrasadas <b>{{$cont_ordenes-$cont_a_tiempo}}</b></span>
                         
                     </div>
                     <!-- /.info-box-content -->
@@ -104,6 +105,9 @@
                                 Proceso
                             </th>
                             <th>
+                                Cliente
+                            </th>
+                            <th>
                                 Fecha Hora
                             </th>
                             <th>
@@ -129,6 +133,9 @@
                             </td>
                             <td>
                                 {{ $cat->descripcion_procesos}}
+                            </td>
+                            <td>
+                                {{$cat->Cliente_Nombre_Comercial}}
                             </td>
                             <td>
                                 {{ $cat->tb_fecha_hora}}

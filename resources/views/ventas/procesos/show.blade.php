@@ -74,6 +74,22 @@
                         @endforeach
                     </select>
                 </div>
+                @elseif(Auth::user()->id_tb_departamentos==2)
+                <div class="form-group" id="selectordiseno">
+                    <select class="form-control" id="asignado" name="asignado" required="">
+                        <option disabled="" selected="" value="">
+                            Asignar Empleado
+                        </option>
+                        @foreach($usuarios as $usuario)
+                            @if($usuario->id_tb_departamentos == 3)
+                        <option value="{{$usuario->id}}">
+                            {{$usuario->name}}
+                        </option>
+                        @endif
+                        @endforeach
+                    </select>
+                </div>
+
                 @else
                 <input id="asignado" name="asignado" type="hidden" value="{{Auth::user()->id}}">
                 </input>
@@ -169,6 +185,8 @@ titulo();
      
 
 $("#numfactura").hide();
+$("#selectordiseno").hide();
+
 
 var compruebafactura = '{{$proceso->descripcion_procesos}}';
 
@@ -201,9 +219,17 @@ function MostrarFact(){
     {
         $("#numfactura").hide();
     }
-
+    if(procesoselecionado.trim()=="Diseño"){
+        $("#selectordiseno").show();
+    }
+    else
+    {
+        $("#selectordiseno").hide();
+    }
      console.log(procesoselecionado);
 }
+
+
 </script>
 @endpush
 @endsection

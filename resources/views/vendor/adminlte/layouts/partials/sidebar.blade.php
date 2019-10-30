@@ -213,7 +213,7 @@
                         <a href="{{url('reportes/entrega')}}">
                             <i class="fa fa-check">
                             </i>
-                            Listas para Entrega
+                            Eficiencia en Entrega
                         </a>
                     </li>
                     <li>

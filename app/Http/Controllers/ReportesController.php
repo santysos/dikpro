@@ -1,3 +1,5 @@
+
+application/x-httpd-php ReportesController.php ( PHP script text )
 <?php
 
 namespace Dikpro2\Http\Controllers;
@@ -61,7 +63,7 @@ class ReportesController extends Controller
 
                 return $respuesta;
             } elseif ($respuesta->y == 1) {
-                $respuesta = $respuesta->y . 'añ ' . $respuesta->m . 'me ' . $respuesta->d . 'd ' . $respuesta->h . 'ho ' . $respuesta->i . 'min ' . $respuesta->s . 'seg';
+                $respuesta = $respuesta->y . 'a��� ' . $respuesta->m . 'me ' . $respuesta->d . 'd ' . $respuesta->h . 'ho ' . $respuesta->i . 'min ' . $respuesta->s . 'seg';
 
                 return $respuesta;
             }
@@ -83,7 +85,8 @@ class ReportesController extends Controller
                 ->join('users as usr', 'usr.id', '=', 'pro.asignador')
                 ->join('tb_descripcion_procesos as dpro', 'dpro.id_tb_descripcion_procesos', '=', 'pro.id_tb_descripcion_procesos')
                 ->join('tb_ordenes as ord', 'ord.id_tb_ordenes', '=', 'pro.tb_ordenes_id_tb_ordenes')
-                ->select('pro.id_tb_procesos', 'pro.tb_ordenes_id_tb_ordenes', 'pro.tb_fecha_hora', 'emp.name as asignado', 'dpro.descripcion_procesos', 'usr.name as asignador', 'ord.Fecha_de_Entrega')
+                ->join('tb_cliente as cli','ord.id_tb_cliente','=','cli.id_tb_cliente')
+                ->select('cli.Cliente_Nombre_Comercial','cli.Contacto_Razon_Social','pro.id_tb_procesos', 'pro.tb_ordenes_id_tb_ordenes', 'pro.tb_fecha_hora', 'emp.name as asignado', 'dpro.descripcion_procesos', 'usr.name as asignador', 'ord.Fecha_de_Entrega')
                 ->where('pro.id_tb_descripcion_procesos', '=', '9')
                 ->where('pro.condicion', '=', '1')
                 ->whereBetween('pro.tb_fecha_hora', [$f1, $f2])
@@ -93,8 +96,19 @@ class ReportesController extends Controller
                 ->orderBy('pro.tb_fecha_hora', 'desc')                
                 ->get();
 
-           // dd($enentrega);
+                $ordenes = DB::table('tb_ordenes as ord')
+                ->join('tb_cliente as cli', 'cli.id_tb_cliente', '=', 'ord.id_tb_cliente')
+                ->join('users as user', 'user.id', '=', 'ord.agente')
+                ->join('tb_procesos as pro', 'pro.tb_ordenes_id_tb_ordenes', '=', 'ord.id_tb_ordenes')
+                ->join('tb_descripcion_procesos as despro', 'despro.id_tb_descripcion_procesos', '=', 'pro.id_tb_descripcion_procesos')
+                ->select('ord.id_tb_ordenes', 'ord.Fecha_de_Inicio', 'ord.Total_Venta', 'ord.Abono', 'user.name', 'despro.descripcion_procesos', 'pro.num_factura', 'cli.Cliente_Nombre_Comercial')
+                ->where('ord.condicion', '=', '1')
+                ->where('pro.condicion', '=', '1')
+                ->whereBetween('ord.Fecha_de_Inicio', [$f1, $f2])
+                ->get();
 
+           // dd($enentrega);
+            $cont_ordenes = $ordenes->count();
             $enentrega->count = 0;
             $cont_a_tiempo =0;
             $eficiencia=0;
@@ -115,13 +129,13 @@ class ReportesController extends Controller
                 $key->tb_fecha_hora = formatofecha($key->tb_fecha_hora); //Se asigna el formato humano a la fecha
                 $enentrega->count++;
             }
-            if($enentrega->count>0)
-            $eficiencia = number_format((($cont_a_tiempo/$enentrega->count)*100),2);
+            if($cont_ordenes>0)
+            $eficiencia = number_format((($cont_a_tiempo/$cont_ordenes)*100),2);
 
 
             // dd($enentrega, $retraso);
 
-            return view('reportes.entrega.index', ["enentrega" => $enentrega,"eficiencia"=>$eficiencia, "cont_a_tiempo"=>$cont_a_tiempo,"f1" => $f1, "f2" => $f2]);
+            return view('reportes.entrega.index', ["ordenes"=>$ordenes,"cont_ordenes"=>$cont_ordenes, "enentrega" => $enentrega,"eficiencia"=>$eficiencia, "cont_a_tiempo"=>$cont_a_tiempo,"f1" => $f1, "f2" => $f2]);
         }
     }
 
